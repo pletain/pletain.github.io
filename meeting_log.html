@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AAOC 회의록</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            font-family: 굴림;
+            border: 2px;
+            border-color: #3333FF;
+            border-radius: 8px;
+            /*모서리 둥글게*/
+        }
+
+        tr {
+            border-bottom: 3px solid #d3d3d3;
+        }
+
+        input {
+            font-size: 40px;
+            text-align: center;
+        }
+
+
+
+        #calendar {
+            border-top-left-radius: 0.8em;
+            border-top-right-radius: 0.8em;
+            border-bottom: 1px solid #c4c2c2;
+            text-shadow: 0px-1px 1px rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 0 2px rgba(255, 255, 255, 0.3), inset 0 1 2px rgba(0, 0, 0, 0.29);
+            background-color: #efefef;
+            margin: auto;
+            color: black;
+            z-index: -1000;
+        }
+
+
+        body {
+            background: #000000;
+            font-size: 62.5%;
+        }
+
+        .conference_section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section {
+            background: #efefef;
+            font-size: 5rem;
+            font-weight: 400;
+            min-width: 1386px;
+            max-width: 1386px;
+            height: 2000px;
+            margin: 0 auto;
+        }
+
+        .create {
+            margin: 0 auto;
+            position: absolute;
+            max-width: 1386px;
+            min-width: 1386px;
+            width: 100%;
+            height: 100%;
+            background-color: #f8f8f8;
+            transition: all 600ms cubic-bezier(0.86, 0, 0.07, 1);
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .update {
+            margin: 0 auto;
+            position: absolute;
+            max-width: 1386px;
+            min-width: 1386px;
+            width: 100%;
+            height: 100%;
+            background-color: #f8f8f8;
+            transition: all 600ms cubic-bezier(0.86, 0, 0.07, 1);
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .create_nav {
+            line-height: 1.5px;
+            background-color: #393939;
+            border-top-left-radius: 0.3em;
+            border-top-right-radius: 0.3em;
+            text-shadow: 0px-1px 1px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #3a3a3d;
+            border-bottom: 1px solid #171718;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 0 2px rgba(255, 255, 255, 0.3), inset 0 1 2px rgba(0, 0, 0, 0.29);
+            display: flex;
+            justify-content: space-between;
+            margin: auto;
+            max-width: 1386px;
+            min-width: 1386px;
+            height: 80px;
+        }
+
+        .cancel {
+            color: #ff443a;
+            font-weight: 400;
+            font-size: 45px;
+            text-align: center;
+            margin: 0 5px;
+            line-height: 80px;
+            width: 10%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .cancel:hover {
+            color: #ffafaa;
+        }
+
+        .add {
+            color: #ff443a;
+            font-weight: 400;
+            font-size: 45px;
+            text-align: center;
+            margin: 0 5px;
+            line-height: 80px;
+            width: 10%;
+            height: 100%;
+            cursor: pointer;
+
+        }
+
+        .add.off {
+            color: #a8a8a8;
+            pointer-events: none;
+        }
+
+        .add:hover {
+            color: #ffafaa;
+        }
+
+        .new_conf {
+            color: #e4e4e4;
+            font-weight: 400;
+            font-size: 45px;
+            text-align: center;
+            margin: 0 5px;
+            line-height: 80px;
+            width: 30%;
+            height: 100%;
+        }
+
+        .conf_item {
+            transition: 1s;
+            cursor: pointer;
+            overflow: scroll;
+            -ms-overflow-style: none;
+            margin: 10px;
+            border-radius: 2%;
+            border-left: 15px solid #ff2d54;
+            padding-left: 25px;
+            width: 98%;
+            height: 700px;
+        }
+
+        .conf_item::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .conf_item:hover{
+            transition: all 600ms cubic-bezier(0.86, 0, 0.07, 1);
+            background-color: #adadad;
+        }
+
+        .del_button{
+            margin: 0px 0px 0px 1080px;
+            height: 50px;
+            width: 250px;
+            text-align: right;  
+            font-size: 40px;
+            color: #ff443a;
+            font-weight: 400;
+            font-size: 45px;
+            cursor: pointer;
+        }
+
+        .del_button:hover{
+            color: #ff1d11;
+        }
+
+        .title {
+            font-size: 80px;
+            font-weight: 700;
+            margin-bottom: 5px;
+
+        }
+
+        .when {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .subjectivity {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .sub_stuff {
+            padding-bottom: 3px;
+            border-bottom: 2px solid #b1b1ba;
+            display: flex;
+            color: #7e7e83;
+            font-size: 30px;
+            font-weight: bold;
+            margin: auto;
+            max-width: 1386px;
+            min-width: 1386px;
+        }
+
+        .where {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .document {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .attend {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .content {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .etc {
+            color: #ff2d54;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+
+
+        .conference_section.show .create {
+            top: 0%;
+        }
+
+        .conference_section.modi .update {
+            top: 0%;
+        }
+
+        .button_group {
+            width: 8%;
+            margin: 10px;
+        }
+
+        #cur_date_area {
+            color: #e4e4e4;
+            font-weight: 400;
+            font-size: 40px;
+            text-align: center;
+            margin: auto;
+            width: 70%;
+        }
+
+        .nav-btn {
+            padding: 0 12px;
+            margin: auto 4px;
+            font-weight: 100;
+            line-height: 10px;
+            color: #e4e4e4;
+            background-color: #686868;
+            height: 85%;
+            border: #525151 1px;
+        }
+
+        .nav-btn:hover {
+            color: #ff453a;
+        }
+
+        .no_event {
+            color: #a8a8a8;
+            line-height: 1000px;
+            text-align: center;
+            height: 1000px;
+        }
+
+        .deco_circle {
+            margin: 3px;
+            padding: 0.3em;
+            border-color: #000;
+            border: 0px;
+            border-radius: 50%;
+            text-align: center;
+            width: 25px;
+            height: 25px;
+
+        }
+
+        .deco_circle.red {
+            background-color: #ff453a;
+        }
+
+        .deco_circle.yellow {
+            background-color: #ff9500;
+        }
+
+        .deco_circle.green {
+            background-color: #28cd41;
+        }
+
+        .nav-bar {
+            line-height: 1.5px;
+            background-color: #393939;
+            text-shadow: 0px-1px 1px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #aba9a9;
+            border-bottom: 1px solid #858585;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 0 2px rgba(255, 255, 255, 0.3), inset 0 1 2px rgba(0, 0, 0, 0.29);
+            display: flex;
+            justify-content: space-between;
+            margin: auto;
+            max-width: 1386px;
+            min-width: 1386px;
+            height: 55px;
+        }
+
+        #title {
+            text-align: left;
+            font-size: 40px;
+            margin: 20px 10px;
+            width: 98%;
+            height: 80px;
+            border: 3px solid #ccd1ff;
+        }
+
+
+        .detail {
+            font-size: 45px;
+        }
+
+        .detail label {
+            margin: 0 0 0 10px;
+            color: #fd2015;
+            font-weight: 500;
+        }
+
+        .detail input {
+            margin: 0 0 10px 0;
+            text-align: left;
+            border: 3px solid #ccd1ff;
+            width: 41%;
+            height: 50px;
+        }
+
+        .detail #receipt {
+            width: 38%;
+        }
+
+
+        .check {
+            font-size: 40px;
+        }
+
+        .check label {
+            font-size: 45px;
+            margin: 0 0 0 10px;
+        }
+
+        .check input {
+            width: 5%;
+            height: 40px;
+            line-height: 65px;
+        }
+
+        textarea {
+            width: 98%;
+            height: 300px;
+            margin: 0 10px 0 10px;
+            resize: none;
+            overflow: scroll;
+            font-size: 50px;
+            border: 3px solid #ccd1ff;
+        }
+
+        textarea::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        #etc {
+            height: 200px;
+        }
+
+        button,
+        button::after {
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+
+
+        button {
+            background: none;
+            border: 0;
+            color: #000000;
+            display: block;
+            font-size: 1.6em;
+            font-weight: bold;
+            padding: 2.5em;
+            max-width: 195.59px;
+            max-height: 194px;
+            position: relative;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        button::before,
+        button::after {
+            background: blueviolet;
+            content: '';
+            position: absolute;
+            z-index: -1;
+        }
+
+        button:hover {
+            color: #ff3f41;
+        }
+
+        .btn-2::after {
+            height: 100%;
+            left: 0;
+            top: 0;
+            width: 0;
+            display: flex;
+        }
+
+        .btn-2:hover:after {
+            width: 100%;
+        }
+
+        .circle {
+            padding: 0.02em;
+            border-radius: 50%;
+            text-align: center;
+            background: coral;
+        }
+
+        /* BUTTON 3 */
+        .btn-3::after {
+            color: #f8352f;
+            height: 0;
+            left: 50%;
+            top: 50%;
+            width: 0;
+        }
+
+        .btn-3:hover:after {
+            height: 100%;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function leadingSpaces(n, digits) { //자릿 수 맞추기
+            var space = '';
+            n = n.toString();
+
+            if (n.length < digits) {
+                for (var i = 0; i < digits - n.length; i++)
+                    space += '&nbsp;';
+            }
+            return space + n + space;
+        }
+
+        var today = new Date();//오늘 날짜//내 컴퓨터 로컬을 기준으로 today에 Date 객체를 넣어줌
+        var date = new Date();//today의 Date를 세어주는 역할
+        function prevCalendar() {//이전 달
+            // 이전 달을 today에 값을 저장하고 달력에 today를 넣어줌
+            //today.getFullYear() 현재 년도//today.getMonth() 월  //today.getDate() 일 
+            //getMonth()는 현재 달을 받아 오므로 이전달을 출력하려면 -1을 해줘야함
+            today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+            prev_day = undefined;
+            buildCalendar(); //달력 cell 만들어 출력 
+        }
+
+        function nextCalendar() {//다음 달
+            // 다음 달을 today에 값을 저장하고 달력에 today 넣어줌
+            //today.getFullYear() 현재 년도//today.getMonth() 월  //today.getDate() 일 
+            //getMonth()는 현재 달을 받아 오므로 다음달을 출력하려면 +1을 해줘야함
+            today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            prev_day = undefined;
+            buildCalendar();//달력 cell 만들어 출력
+
+        }
+
+        function buildCalendar() {//현재 달 달력 만들기
+            var doMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            //이번 달의 첫째 날,
+            //new를 쓰는 이유 : new를 쓰면 이번달의 로컬 월을 정확하게 받아온다.     
+            //new를 쓰지 않았을때 이번달을 받아오려면 +1을 해줘야한다. 
+            //왜냐면 getMonth()는 0~11을 반환하기 때문
+            var lastDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            //이번 달의 마지막 날
+            //new를 써주면 정확한 월을 가져옴, getMonth()+1을 해주면 다음달로 넘어가는데
+            //day를 1부터 시작하는게 아니라 0부터 시작하기 때문에 
+            //대로 된 다음달 시작일(1일)은 못가져오고 1 전인 0, 즉 전달 마지막일 을 가져오게 된다
+            var tbCalendar = document.getElementById("calendar");
+            //날짜를 찍을 테이블 변수 만듬, 일 까지 다 찍힘
+            var tbCalendarYM = document.getElementById("tbCalendarYM");
+            //테이블에 정확한 날짜 찍는 변수
+            //innerHTML : js 언어를 HTML의 권장 표준 언어로 바꾼다
+            //new를 찍지 않아서 month는 +1을 더해줘야 한다. 
+            tbCalendarYM.innerHTML = today.getFullYear() + "년 " + (today.getMonth() + 1) + "월";
+            // -----------------------------------
+            ym_sync(today.getFullYear(), (today.getMonth() + 1));
+
+
+            // -----------------------------------
+            /*while은 이번달이 끝나면 다음달로 넘겨주는 역할*/
+            while (tbCalendar.rows.length > 2) {
+                //열을 지워줌
+                //기본 열 크기는 body 부분에서 2로 고정되어 있다.
+                tbCalendar.deleteRow(tbCalendar.rows.length - 1);
+                //테이블의 tr 갯수 만큼의 열 묶음은 -1칸 해줘야지 
+                //30일 이후로 담을달에 순서대로 열이 계속 이어진다.
+            }
+            var row = null;
+            row = tbCalendar.insertRow();
+            //테이블에 새로운 열 삽입//즉, 초기화
+            var cnt = 0;// count, 셀의 갯수를 세어주는 역할
+            // 1일이 시작되는 칸을 맞추어 줌
+            for (i = 0; i < doMonth.getDay(); i++) {
+                /*이번달의 day만큼 돌림*/
+                cell = row.insertCell();//열 한칸한칸 계속 만들어주는 역할
+                cnt = cnt + 1;//열의 갯수를 계속 다음으로 위치하게 해주는 역할
+            }
+
+            /*달력 출력*/
+            for (i = 1; i <= lastDate.getDate(); i++) {
+                //1일부터 마지막 일까지 돌림
+                cell = row.insertCell();//열 한칸한칸 계속 만들어주는 역할
+                // cell.innerHTML = '<button class="btn-2" onclick="div_show(' + i + '); show_schedule(' + i + '); ">' + leadingSpaces(i, 2) + '</button>'//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
+                cell.innerHTML = '<button class="btn-2" onclick="show_schedule(' + i + '); "><a>' + leadingSpaces(i, 2) + '</a></button>'//셀을 1부터 마지막 day까지 HTML 문법에 넣어줌
+                cnt = cnt + 1;//열의 갯수를 계속 다음으로 위치하게 해주는 역할
+                if (cnt % 7 == 1) {/*일요일 계산*/
+                    //1주일이 7일 이므로 일요일 구하기
+                    //월화수목금토일을 7로 나눴을때 나머지가 1이면 cnt가 1번째에 위치함을 의미한다
+                    cell.innerHTML = '<button class="btn-2" font color=#F79DC2 onclick="show_schedule(' + i + '); "><a>' + leadingSpaces(i, 2) + '</a></button>'
+                    //1번째의 cell에만 색칠
+                }
+                if (cnt % 7 == 0) {/* 1주일이 7일 이므로 토요일 구하기*/
+                    //월화수목금토일을 7로 나눴을때 나머지가 0이면 cnt가 7번째에 위치함을 의미한다
+                    cell.innerHTML = '<button class="btn-2" font color=skyblue onclick="show_schedule(' + i + '); "><a>' + leadingSpaces(i, 2) + '</a></button>'
+                    //7번째의 cell에만 색칠
+                    row = calendar.insertRow();
+                    //토요일 다음에 올 셀을 추가
+                }   
+                if (today.getFullYear() == date.getFullYear()
+                    && today.getMonth() == date.getMonth()
+                    && i == date.getDate()) {
+                    cell.bgColor = "#ff9d0a";
+                }
+            }
+            start_day = doMonth.getDay();
+            conf_indicator();
+
+
+        }
+
+        // -----------------------------------------------------------------------------------------------------------
+        var start_day
+        var cur_ym
+        var cur_day
+        var cur_date
+        var row
+        var col
+        var prev_day
+        var page_flag = 0;
+        var modi_index = 0;
+        var Index = new Array(); // Index[날짜] = 인덱스.
+        var conf_list = new Array(); //  conf_list[날짜][인덱스][객체]
+
+        function conf_indicator() {
+            var check_date
+            var check_row
+            var check_col
+            var num
+            let target
+
+            for (var d = 1; d < 32; d++) {
+                check_date = cur_ym * 100 + d;
+                if (Index[check_date] > 0) {
+                    num = d - 1; //0번 부터 시작하므로 1을 빼준다.
+                    target = document.getElementById("calendar").getElementsByTagName("a");
+                    target[num].style.color = "#ff2d54";
+                }
+            }
+        }
+
+        function select_indicator(day) {
+            var num
+            if (prev_day != undefined) {
+                calendar.rows[row].cells[col].innerHTML = '<button class="btn-2" font color=#F79DC2 onclick="show_schedule(' + prev_day + '); "><a>' + leadingSpaces(prev_day, 2) + '</a></button>';
+            }
+            num = start_day + day - 1; //0번 부터 시작하므로 1을 빼준다.
+            row = parseInt(num / 7) + 2;
+            col = parseInt(num % 7);
+            prev_day = day;
+            calendar.rows[row].cells[col].innerHTML = '<button class="btn-2" style="border: 4px solid red;" font color=#F79DC2 onclick="show_schedule(' + prev_day + '); "><a>' + leadingSpaces(prev_day, 2) + '</a></button>';
+        }
+        function ym_sync(year, month) {
+            cur_ym = year * 100 + month;
+        }
+
+        function day_sync(day) {
+            cur_day = day;
+        }
+
+        function date_sync(day) { //현재 날짜 동기화 
+            day_sync(day);
+            cur_date = cur_ym * 100 + day;
+        }
+
+        function show_schedule(day) { // 현재 날짜 회의 정보 창 띄우기 
+            date_sync(day); //날짜 동기화  시켜줌
+            select_indicator(day);
+            conf_indicator();
+            if (Index[cur_date] == undefined) //해당 날짜에 접속한적이 없다면
+            {
+                conf_list[cur_date] = new Array();
+                Index[cur_date] = 0;
+            }
+            show_date(); // xxxx년 xx월 xx일 회의 목록 출력
+            show_conf();
+        }
+
+        function show_date() { // 현재 날짜 표시
+            var year = parseInt(cur_ym / 100);
+            var month = cur_ym % 100;
+            var day = cur_date - (cur_ym * 100);
+            document.getElementById("cur_date_area").innerHTML = year + "년 " + month + "월 " + day + "일 회의록&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+
+        function show_addmenu() { // 회의 작성 창 열고 닫기
+            if (page_flag == 0) {
+                var element = document.getElementById("conference_section");
+                element.classList.add('show');
+                page_flag = 1;
+            }
+            else {
+                var element = document.getElementById("conference_section")
+                element.classList.remove('show');
+                page_flag = 0;
+            }
+        }
+
+        function add_conf() { //회의 추가 //작성하기
+            Index[cur_date] += 1;
+            var cur_Index = Index[cur_date];
+            var con = document.getElementById("add").elements;
+            conf_list[cur_date][cur_Index] = new Object();
+            for (var i = 0; i < 5; i++) {
+                conf_list[cur_date][cur_Index][con[i].id] = con[i].value;
+                con[i].value = "";
+            }
+            for (var i = 5; i < 9; i++) {
+                if (con[i].checked == true) {
+                    conf_list[cur_date][cur_Index][con[i].id] = con[i].value;
+                }
+                con[i].value = "";
+            }
+            for (var i = 9; i < con.length; i++) {
+                conf_list[cur_date][cur_Index][con[i].id] = con[i].value;
+                con[i].value = "";
+            }
+            show_addmenu(); // 회의 작성 창 닫기
+            show_schedule(cur_day);
+        }
+
+        function show_conf() { //현재 날짜 회의록 출력
+            let str = " ";
+            var cur_Index = Index[cur_date];
+            document.getElementById("conflist_area").innerHTML = '<div class="no_event">회의 없음</div>';
+            for (var i = 1; i <= cur_Index; i++) {
+                str += '<div class="del_button" onclick="del_conf(' + i + ')">회의 삭제</div>'
+                str += '<div class="conf_item" onclick="show_modimenu(' + i + ')">';
+                str += '<div class="title">' + conf_list[cur_date][i]["title"] + '</div>';
+                str += '<div class="subjectivity">' + conf_list[cur_date][i]["subjectivity"] + '</div>';
+                str += '<div class="when">' + conf_list[cur_date][i]["when"] + '</div>';
+                str += '<div class="sub_stuff">';
+                str += '<div class="receipt">접수자 ' + conf_list[cur_date][i]["receipt"] + '&nbsp;</div>';
+                str += '<div class="request">요청자 ' + conf_list[cur_date][i]["request"] + '&nbsp;</div>';
+                if (conf_list[cur_date][i][enroll]) str += '<div class="enroll">통합예약 체계 등록 여부 YES</div>';
+                else str += '<div class="enroll">통합예약 체계 등록 여부 NO</div>';
+                str += '</div>';
+                str += '<div class="where">장소 ' + conf_list[cur_date][i]["where"] + '</div>';
+                str += '<div class="document">문서 ' + conf_list[cur_date][i]["document"] + '</div>';
+                str += '<div class="attend">참석 ' + conf_list[cur_date][i]["attend"] + '</div>';
+                str += '<div class="content">내용<br>' + conf_list[cur_date][i]["content"] + '</div>';
+                str += '<div class="etc">기타 특이사항<br>' + conf_list[cur_date][i]["etc"] + '</div>';
+                str += '</div>';
+            }
+
+            if (str != " ")
+                document.getElementById("conflist_area").innerHTML = str;
+        }
+
+        function show_modimenu(index) { // 회의 수정 창 열고 닫기
+            if (page_flag == 0) {
+                var element = document.getElementById("conference_section");
+                modi_index = index;
+                var cur_Index = index;
+                var con = document.getElementById("modify").elements;
+                for (var i = 0; i < 5; i++) {
+                    con[i].value = conf_list[cur_date][cur_Index][con[i].id];
+                }
+                for (var i = 5; i < 9; i++) {
+                    if (conf_list[cur_date][cur_Index]['where'] == con[i].value) {
+                        con[i].checked == true;
+                    }
+                }
+                for (var i = 9; i < con.length; i++) {
+                    con[i].value = conf_list[cur_date][cur_Index][con[i].id];
+                }
+                element.classList.add('modi');
+                page_flag = 1;
+            }
+            else {
+                modi_index = 0;
+                var element = document.getElementById("conference_section");
+                element.classList.remove('modi');
+                page_flag = 0;
+            }
+        }
+
+        function modi_conf(cur_Index) { //회의 수정하기
+            var con = document.getElementById("modify").elements;
+            for (var i = 0; i < 5; i++) {
+                conf_list[cur_date][cur_Index][con[i].id] = con[i].value;
+            }
+            for (var i = 5; i < 9; i++) {
+                if (con[i].checked == true) {
+                    conf_list[cur_date][cur_Index][con[i].id] = true;
+                }
+            }
+            for (var i = 9; i < con.length; i++) {
+                conf_list[cur_date][cur_Index][con[i].id] = con[i].value;
+            }
+            show_modimenu(0); // 회의 수정 창 닫기
+            show_schedule(cur_day);
+        }
+
+        function del_conf(index) { // 회의 삭제
+            alert("정말 삭제하시겠습니까? 담당관님의 등짝 스매싱을 맞을 수 있습니다!!");
+            if (index == Index[cur_date]) {
+                Index[cur_date] = Index[cur_date] - 1;
+            }
+            else {
+                for (var i = index; i < Index[cur_date]; i++) {
+                    conf_list[cur_date][i].title = conf_list[cur_date][i + 1].title;
+                    conf_list[cur_date][i].when = conf_list[cur_date][i + 1].when;
+                    conf_list[cur_date][i].where = conf_list[cur_date][i + 1].where;
+                    conf_list[cur_date][i].document = conf_list[cur_date][i + 1].document;
+                    conf_list[cur_date][i].subjectivity = conf_list[cur_date][i + 1].subjectivity;
+                    conf_list[cur_date][i].attend = conf_list[cur_date][i + 1].attend;
+                    conf_list[cur_date][i].request = conf_list[cur_date][i + 1].request;
+                    conf_list[cur_date][i].receipt = conf_list[cur_date][i + 1].receipt;
+                    conf_list[cur_date][i].etc = conf_list[cur_date][i + 1].etc;
+                }
+
+                Index[cur_date] -= 1;
+            }
+            show_conf()
+        }
+
+        function ATurn_on() {
+            document.getElementById("switch").classList.remove('off');
+        }
+
+        function CTurn_on() {
+            document.getElementById("switch2").classList.remove('off');
+        }
+
+        function checkOnlyOne(element) {
+
+            const checkboxes
+                = document.getElementsByName("where");
+
+            checkboxes.forEach((cb) => {
+                cb.checked = false;
+            })
+
+            element.checked = true;
+        }
+
+
+    </script>
+
+
+
+</head>
+
+<body style="overflow: hidden;">
+    <table id="calendar">
+        <tr class="top-nav">
+            <td>
+                <button style="padding: 0; text-align: center;" class="btn-3"
+                    onclick="prevCalendar()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button> </td> <td id="tbCalendarYM"
+                        colspan="5" style="color: #f8352f; font-weight: 500; font-size: 65px;">
+                        yyyy년 m월
+            </td>
+            <td>
+                <button style="padding: 0;" class="btn-3"
+                    onclick="nextCalendar()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </td>
+        </tr>
+        <tr style="background-color: #f9f9f9; color: #000;">
+            <td align="center">
+                <font color="#F79DC2">일
+            </td>
+            <td align="center">
+                월
+            </td>
+            <td align="center">
+                화
+            </td>
+            <td align="center">
+                수
+            </td>
+            <td align="center">
+                목
+            </td>
+            <td align="center">금
+            </td>
+            <td align="center" style="font-weight: 100; color: skyblue">토
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        buildCalendar();
+    </script>
+    <div id="conference_section" class="conference_section">
+        <div class="nav-bar">
+            <div class="button_group">
+                <input type="button" class="deco_circle red">
+                <input type="button" class="deco_circle yellow">
+                <input type="button" class="deco_circle green">
+            </div>
+            <div id="cur_date_area"></div>
+            <input type="button" class="btn-3 nav-btn" onclick="show_addmenu()" value="+" />
+        </div>
+        <div class="content-section" style="overflow: scroll;">
+            <div id="conflist_area">
+            </div>
+        </div>
+        <div class="create">
+            <div class="create_nav">
+                <div class="cancel" onclick="show_addmenu()">
+                    취소
+                </div>
+                <div class="new_conf">
+                    새로운 회의
+                </div>
+                <div id="switch" class="add off" onclick="add_conf()">
+                    추가
+                </div>
+            </div>
+            <form id="add">
+                <input type="text" id="title" onchange="ATurn_on()" placeholder="회의 제목을 입력해주세요" value="" /><br />
+                <div class="detail">
+                    <label>일자 </label> <input type="text" id="when" placeholder="회의 일자를 입력해주세요" value="" />
+                    <label>주관 </label> <input type="text" id="subjectivity" value="" />
+                    <br>
+                    <label>참석 </label> <input type="text" id="attend" value="" />
+                    <label>요청 </label> <input type="text" id="request" value="" /><br />
+                    <div class="check">
+                        <label>장소</label>
+                        <input type='checkbox' name ="where" id="where" value='vtc' onclick='checkOnlyOne(this)' />화상회의실
+                        <input type='checkbox' name ="where" id='where' value='osc' onclick='checkOnlyOne(this)' />OSC
+                        <input type='checkbox' name ="where" id='where' value='ccc' onclick='checkOnlyOne(this)' />CCC
+                        <label>&nbsp;통합예약 체계 등록 여부</label>
+                        <input type='checkbox' id='enroll' value="" />
+                    </div>
+                    <label>문서 </label> <input type="text" id="document" value="" />
+                    <label>접수자 </label> <input type="text" id="receipt" placeholder="일병 김태형" value="" /><br />
+                    <label>내용 </label><br> <textarea id="content" rows="5" cols="33"> </textarea><br>
+                    <label>기타 특이사항</label><br> <textarea id="etc" rows="5" cols="33"> </textarea>
+                </div>
+            </form>
+        </div>
+        <div class="update">
+            <div class="create_nav">
+                <div class="cancel" onclick="show_modimenu(modi_index)">
+                    취소
+                </div>
+                <div class="new_conf">
+                    회의 편집
+                </div>
+                <div id="switch2" class="add off" onclick="modi_conf(modi_index)">
+                    완료
+                </div>
+            </div>
+            <form id="modify">
+                <input type="text" id="title" onchange="CTurn_on()" placeholder="회의 제목을 입력해주세요" value="" /><br />
+                <div class="detail">
+                    <label>일자 </label> <input type="text" id="when" onchange="CTurn_on()" placeholder="회의 일자를 입력해주세요" value="" />
+                    <label>주관 </label> <input type="text" id="subjectivity" onchange="CTurn_on()" value="" />
+                    <br>
+                    <label>참석 </label> <input type="text" id="attend" onchange="CTurn_on()" value="" />
+                    <label>요청 </label> <input type="text" id="request" onchange="CTurn_on()" value="" /><br />
+                    <div class="check">
+                        <label>장소</label>
+                        <input type='checkbox' name ="where" id="where" onchange="CTurn_on()" value='vtc' onclick='checkOnlyOne(this)' />화상회의실
+                        <input type='checkbox' name ="where" id='where' onchange="CTurn_on()" value='osc' onclick='checkOnlyOne(this)' />OSC
+                        <input type='checkbox' name ="where" id='where' onchange="CTurn_on()" value='ccc' onclick='checkOnlyOne(this)' />CCC
+                        <label>&nbsp;통합예약 체계 등록 여부</label>
+                        <input type='checkbox' id='enroll' onchange="CTurn_on()" value="" />
+                    </div>
+                    <label>문서 </label> <input type="text" id="document" onchange="CTurn_on()" value="" />
+                    <label>접수자 </label> <input type="text" id="receipt" onchange="CTurn_on()" placeholder="일병 김태형" value="" /><br />
+                    <label>내용 </label><br> <textarea id="content" onchange="CTurn_on()" rows="5" cols="33"> </textarea><br>
+                    <label>기타 특이사항</label><br> <textarea id="etc" onchange="CTurn_on()" rows="5" cols="33"> </textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        window.onload(show_schedule(date.getDate()));
+        //  //초기에 오늘 날짜 회의 정보 창 띄워주기
+    </script>
+</body>
+
+</html>
