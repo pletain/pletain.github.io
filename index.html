@@ -5,16 +5,15 @@
     <title>달력</title>
     <style type="text/css">
         table {
-            width: 100%;
-            max-width: 1380px;
             border-collapse: collapse;
-            table-layout: fixed;
         }
 
         td {
+            width: 50px;
+            height: 50px;
             text-align: center;
             font-size: 20px;
-            font-family: 굴림;
+            font-family: 나눔고딕;
             border: 2px;
             border-color: #3333FF;
             border-radius: 8px;
@@ -22,7 +21,6 @@
         }
 
         tr {
-            max-width: 1380px;
             border-bottom: 3px solid #d3d3d3;
         }
 
@@ -34,8 +32,6 @@
 
 
         #calendar {
-            width: 100%;
-            max-width: 1380px;
             border-top-left-radius: 0.8em;
             border-top-right-radius: 0.8em;
             border-bottom: 1px solid #c4c2c2;
@@ -49,17 +45,11 @@
 
 
         body {
-            width: 100vw;
-            height: 100vh;
-            max-width: 1380px;
-            margin: 0 auto;
             background: #000000;
             font-size: 62.5%;
         }
 
         .conference_section {
-            width: 100vw;
-            max-width: 1380px;
             position: relative;
             overflow: hidden;
         }
@@ -68,13 +58,17 @@
             background: #efefef;
             font-size: 5rem;
             font-weight: 400;
+            min-width: 1386px;
+            max-width: 1386px;
             height: 2000px;
-            margin: 0;
+            margin: 0 auto;
         }
 
         .create {
             margin: 0 auto;
             position: absolute;
+            max-width: 1386px;
+            min-width: 1386px;
             width: 100%;
             height: 100%;
             background-color: #f8f8f8;
@@ -87,8 +81,8 @@
         .update {
             margin: 0 auto;
             position: absolute;
-            max-width: 1380px;
-            min-width: 1380px;
+            max-width: 1386px;
+            min-width: 1386px;
             width: 100%;
             height: 100%;
             background-color: #f8f8f8;
@@ -110,6 +104,8 @@
             display: flex;
             justify-content: space-between;
             margin: auto;
+            max-width: 1386px;
+            min-width: 1386px;
             height: 80px;
         }
 
@@ -187,7 +183,7 @@
         .del_button{
             margin: 0px 0px 0px 1080px;
             height: 50px;
-            width: 18%;
+            width: 250px;
             text-align: right;  
             font-size: 40px;
             color: #ff443a;
@@ -227,8 +223,8 @@
             font-size: 30px;
             font-weight: bold;
             margin: auto;
-            max-width: 1380px;
-            min-width: 1380px;
+            max-width: 1386px;
+            min-width: 1386px;
         }
 
         .where {
@@ -271,6 +267,11 @@
             top: 0%;
         }
 
+        .button_group {
+            width: 8%;
+            margin: 10px;
+        }
+
         #cur_date_area {
             color: #e4e4e4;
             font-weight: 400;
@@ -309,13 +310,9 @@
             border: 0px;
             border-radius: 50%;
             text-align: center;
-            width: 10%;
-            height: 10%;
+            width: 25px;
+            height: 25px;
 
-        }
-
-        .button_group {
-            margin: 10px;
         }
 
         .deco_circle.red {
@@ -340,6 +337,8 @@
             display: flex;
             justify-content: space-between;
             margin: auto;
+            max-width: 1386px;
+            min-width: 1386px;
             height: 55px;
         }
 
@@ -354,7 +353,7 @@
 
 
         .detail {
-            font-size: 3em;
+            font-size: 45px;
         }
 
         .detail label {
@@ -377,7 +376,7 @@
 
 
         .check {
-            font-size: 0.5em;
+            font-size: 40px;
         }
 
         .check label {
@@ -425,9 +424,9 @@
             color: #000000;
             font-size: 1.6em;
             font-weight: bold;
-            padding: 1.3em;
-            max-width: 195px;
-            max-height: 195px;
+            padding: 2.5em;
+            max-width: 195.59px;
+            max-height: 194px;
             position: relative;
             text-align: center;
             text-transform: uppercase;
@@ -580,7 +579,7 @@
                 if (today.getFullYear() == date.getFullYear()
                     && today.getMonth() == date.getMonth()
                     && i == date.getDate()) {
-                    cell.trbgColor = "#cccccc";
+                    cell.bgColor = "#cccccc";
                 }
             }
             start_day = doMonth.getDay();
@@ -824,18 +823,16 @@
 
 <body style="overflow: hidden;">
     <table id="calendar">
-        <tr>
+        <tr class="top-nav">
             <td>
                 <button style="padding: 0; text-align: center;" class="btn-3"
-                    onclick="prevCalendar()">
-                    <</button> </td> 
-                    <td id="tbCalendarYM"
+                    onclick="prevCalendar()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   <&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button> </td> <td id="tbCalendarYM"
                         colspan="5" style="color: #f8352f; font-weight: 500; font-size: 65px;">
                         yyyy년 m월
             </td>
             <td>
-                <button style="padding: 0; text-align: center;" class="btn-3"
-                    onclick="nextCalendar()">></button>
+                <button style="padding: 0;" class="btn-3"
+                    onclick="nextCalendar()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
             </td>
         </tr>
         <tr style="background-color: #f9f9f9; color: #000;">
